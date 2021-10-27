@@ -1,0 +1,21 @@
+#pragma kernel CSMain
+
+Texture2D<float4> Input;
+RWTexture2D<float4> Result;
+float2 center;
+float R;
+
+#define PI 3.14159265359
+
+[numthreads(8, 8, 1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float2 diff = id.xy - center;
+    float r2 = diff.x * diff.x + diff.y * diff.y;
+    float r = sqrt(r2);
+    if (r2 < R * R) {
+      Result[id.xy] = Input[-cos(- r * PI / 2 / R) * diff  + id.xy];
+    } else {
+      Result[id.xy] = Input[id.xy];
+    }
+}

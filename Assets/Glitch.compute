@@ -1,0 +1,20 @@
+#pragma kernel CSMain
+
+Texture2D<float4> Input;
+RWTexture2D<float4> Result;
+float pos;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if (id.y > pos & id.y < pos + 100) {
+      Result[id.xy] = float4(
+        Input[id.xy - float2(100, 0)].r,
+        Input[id.xy].g,
+        Input[id.xy + float2(100, 0)].b,
+        1
+      );
+    } else {
+      Result[id.xy] = Input[id.xy];
+    }
+}
